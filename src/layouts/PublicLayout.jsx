@@ -10,8 +10,8 @@ const PublicLayout = ({children}) => {
                 <main className='h-full'>
                     {children}
                 </main>
-                <Footer/>
             </div>
+            <Footer/>
         </div>
     )
 }
