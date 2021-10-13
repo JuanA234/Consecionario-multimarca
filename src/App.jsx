@@ -1,9 +1,9 @@
 import 'styles/styles.css';
 import { BrowserRouter as  Router, Switch, Route } from 'react-router-dom';
-import Login from 'pages/Login';
+import Login from 'pages/Auth/Login';
 import Admin from 'pages/admin/Index';
-import Registro from 'pages/Registro';
-import Index from 'pages/Index';
+import Registro from 'pages/Auth/Registro';
+import Index from 'pages/Auth/Index';
 import PublicLayout from 'layouts/PublicLayout';
 import PrivateLayout from 'layouts/PrivateLayout';
 import AuthLayout from 'layouts/AuthLayout';
