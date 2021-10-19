@@ -1,4 +1,4 @@
-import React, {useEffect , useState} from 'react'
+import React, {useEffect , useState, useRef} from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -70,10 +70,11 @@ const Vehiculos = () => {
             {textoBoton}
             </button>
             </div>
-            {mostrarTabla ?  <TablaVehiculos listaVehiculos={vehiculos} /> 
-            :<FormularioCreacionVehiculos funcionParaMostarLaTabla={setMostrarTabla}
+            {mostrarTabla ? (<TablaVehiculos  listaVehiculos={vehiculos} /> )
+            :(<FormularioCreacionVehiculos 
+            setMostrarTabla={setMostrarTabla}
             listaVehiculos={vehiculos}
-            funcionParaAgregarUnVehiculo={setVehiculos} />}
+            setVehiculos={setVehiculos} />)}
             <ToastContainer position='bottom-center' autoClose={5000} />
 
         </div>
@@ -109,65 +110,70 @@ const TablaVehiculos = ({listaVehiculos}) =>{
     );
 }
 
-const FormularioCreacionVehiculos = ({funcionParaMostarLaTabla , listaVehiculos, funcionParaAgregarUnVehiculo}) =>{
-    const [nombre, setNombre] = useState();
-    const [marca, setMarca] = useState();
-    const [modelo, setModelo] = useState();
+const FormularioCreacionVehiculos = ({setVehiculos , listaVehiculos , setMostrarTabla}) =>{
+    const form = useRef(null);
 
-    const enviarAlBackend = () => {
-        toast.success('Vehículo agregado con éxito');
-        funcionParaMostarLaTabla(true);
-        funcionParaAgregarUnVehiculo([
-            ...listaVehiculos,
-            {nombre:nombre, marca:marca, modelo:modelo}]);
+    const submitForm = (e) => {
+        e.preventDefault();
+        const fd = new FormData(form.current);
+
+        const nuevoVehiculo = {};
+        fd.forEach((value, key) => {
+            nuevoVehiculo[key] = value;
+        });
+        setMostrarTabla(true);
+        setVehiculos([...listaVehiculos, nuevoVehiculo]);
+        //Identificar un caso de éxito y mostrar un toast de éxito
+        toast.success("Vehículo agregado con éxito");
+        //Identificar un caso de error y mostrar un toast de error
+         //toast.error("Error agregando vehículo");
+   
+    
     };
+       
+
     return(
     <div className='flex flex-col items-center justify-center'>
         <h2  className='text-2xl font-extrabold text-gray-700'>Crear nuevo vehículo</h2>
-        <form className='flex flex-col'>
+        <form ref={form} onSubmit={submitForm} className='flex flex-col'>
             <label className='flex flex-col' htmlFor='nombre'>
                 Nombre del vehículo
             <input
             name='nombre' 
+            required
             className='bg-gray-50 border border-gray-600 p-2 rounded-lg m-2' 
             type="text"
-            value={nombre}
-            onChange={(e)=>{setNombre(e.target.value)}}
             />
             </label>
             <label className='flex flex-col' htmlFor='marca'>
                 Marca del vehículo
-                <select name="marca"
-                 value={marca}
-                 onChange={(e)=>{setMarca(e.target.value)}}
+                <select 
+                name="marca"
+                required
+                defaultValue={0}
                 className='bg-gray-50 border border-gray-600 p-2 rounded-lg m-2'>
-                    <option disabled>Seleccione una opción</option>
+                    <option disabled value={0}>Seleccione una opción</option>
                     <option>Renault</option>
                     <option>Toyota</option>
                     <option>Ford</option>
                     <option>Mazda</option>
                     <option>Chevrolet</option>
-                </select>
+                </select> 
             </label>
             <label className='flex flex-col' htmlFor='modelo'>
                 Modelo del vehículo
             <input
-             value={modelo}
-             onChange={(e)=>{setModelo(e.target.value)}}
             name='modelo' 
             className='bg-gray-50 border border-gray-600 p-2 rounded-lg m-2' 
             type="number"
+            required
             min={1992}
-            max={2014}
             placeholder='2020'/>
             </label>
             
-            <button 
-            type='button'
+            <button
+            type='submit'
             className='col-span-2 bg-green-500 p-2 rounded-full shadow-md hover:bg-green-700 text-white'
-            onClick={()=>{
-                enviarAlBackend();
-            }}
             >
                 Guardar vehículo
             </button>
