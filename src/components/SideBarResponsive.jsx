@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const SideBarResponsive = () => {
     const [mostrarNavegacion, setMostrarNavegacion] = useState(false);
     return (
-        <div className='md:hidden' onClick={()=>{
+        <div className='lg:hidden' onClick={()=>{
             setMostrarNavegacion(!mostrarNavegacion);
         }}>
           <i className={` mx-2 fas fa-${mostrarNavegacion ? 'times' : 'bars'} hover:text-yellow-500`}/>
